@@ -21,9 +21,9 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            List<Product> objCatogoryList = _unitOfWork.Product.GetAll().ToList();
+            List<Product> objProductList = _unitOfWork.Product.GetAll(includeProperties:"Category").ToList();
             
-            return View(objCatogoryList);
+            return View(objProductList);
         }
 
 
@@ -60,13 +60,16 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                 {
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                     string productPath = Path.Combine(wwwRootPath, @"images\products");
-                    string extension = Path.GetExtension(file.FileName);
+                  
 
                     if (productVM.Product.ImageUrl != null) 
                     {
                         //delete the old image
+
+                        
+
                         var oldImage = 
-                            Path.Combine(wwwRootPath, productVM.Product.ImageUrl.Trim('\\'));
+                            Path.Combine(wwwRootPath, productVM.Product.ImageUrl.Trim('/'));
                     
                         if(System.IO.File.Exists(oldImage))
                         {
@@ -75,7 +78,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
 
                     }
 
-                    using (var fileStream = new FileStream(Path.Combine(productPath, fileName + extension), FileMode.Create))
+                    using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
                     {
                         file.CopyTo(fileStream);
                     }
@@ -101,7 +104,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                 {
                     Text = u.Name,
                     Value = u.Id.ToString()
-                });
+                });     
                    
                 return View(productVM);
             }
@@ -110,8 +113,6 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
         }
 
         
-
-
         public IActionResult Delete(int? id)
         {
             if (id == null || id == 0)
@@ -141,5 +142,17 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
 
 
         }
+
+        #region API CALLS
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            List<Product> objProductList = _unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
+
+            return Json(new {data = objProductList });
+        }
+
+        #endregion
     }
 }
