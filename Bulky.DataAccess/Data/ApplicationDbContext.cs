@@ -16,6 +16,7 @@ namespace BulkyBook.DataAccess.Data
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public DbSet<ApplicationUser> applicationUsers { get; set; }
         public DbSet<Company> Companies { get; set; }
 
@@ -30,6 +31,35 @@ namespace BulkyBook.DataAccess.Data
                 new Category { Id = 3, Name = "History", DisplayOrder = 3 }
 
                 );
+
+
+            modelBuilder.Entity<Company>().HasData(
+                new Company { Id = 1, Name = "Boxfusion", 
+                    StreetAddress ="123 CBD", 
+                    City="Centurion", 
+                    PostalCode="8990", 
+                    PhoneNumber="09634737230", 
+                    State="Gauteng"},
+                new Company { Id = 2, Name = "Investec", 
+                    StreetAddress = "1212 JHN St", 
+                    City = "Joburg", 
+                    PostalCode = "3241", 
+                    PhoneNumber = "067342423", 
+                    State = "Gauteng" },
+                new Company
+                {
+                    Id = 3,
+                    Name = "Open Box",
+                    StreetAddress = "235 Fass St",
+                    City = "Cape Town",
+                    PostalCode = "2312",
+                    PhoneNumber = "0868464637",
+                    State = "Western Cape"
+                }
+
+                );
+
+
 
             modelBuilder.Entity<Product>().HasData(
                 new Product
